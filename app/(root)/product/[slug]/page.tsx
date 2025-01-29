@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import NotFoundPage from "@/app/not-found";
+import AddToCart from "@/components/product/add-to-cart";
 import ProductImages from "@/components/product/product-images";
 import ProductPrice from "@/components/product/product-price";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { getMyCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/products.actions";
 import { notFound } from "next/navigation";
 
@@ -14,6 +16,7 @@ const ProductDetailsPage = async (props: {
 }) => {
   const { slug } = await props.params;
   const product = await getProductBySlug(slug);
+  const cart = await getMyCart();
 
   if (!product) notFound();
   return (
@@ -45,36 +48,43 @@ const ProductDetailsPage = async (props: {
             </div>
 
             <div className="mt-10">
-                <p className="font-semibold">Description</p>
-                <p>{product.description}</p>
+              <p className="font-semibold">Description</p>
+              <p>{product.description}</p>
             </div>
           </div>
 
           <div>
             <Card>
-                <CardContent className="p-4">
-                    <div className="mb-2 flex justify-between">
-                        <div>Price</div>
-                        <div>
-                            <ProductPrice value={Number(product.price)} />
-                        </div>
-                    </div>
+              <CardContent className="p-4">
+                <div className="mb-2 flex justify-between">
+                  <div>Price</div>
+                  <div>
+                    <ProductPrice value={Number(product.price)} />
+                  </div>
+                </div>
 
-                    <div className="mb-2 flex justify-between">
-                        <div>Status</div>
-                        {product.stock>0 ? (
-                            <Badge variant={'outline'}>In Stock</Badge>
-                        ) : (<Badge variant={'destructive'}>Out of Stock</Badge>)}
-                    </div>
+                <div className="mb-2 flex justify-between">
+                  <div>Status</div>
+                  {product.stock > 0 ? (
+                    <Badge variant={'outline'}>In Stock</Badge>
+                  ) : (<Badge variant={'destructive'}>Out of Stock</Badge>)}
+                </div>
 
-                    {product.stock>0 && <div className="flex-center">
-                        <Button className="w-full">Add To Cart</Button>
-                        </div>}
-                </CardContent>
+                {product.stock > 0 && <div className="flex-center">
+                  <AddToCart cart={cart} item={{
+                    productId: product.id,
+                    name: product.name,
+                    slug: product.slug,
+                    price: product.price,
+                    qty: 1,
+                    image: product.images![0]
+                  }} />
+                </div>}
+              </CardContent>
             </Card>
           </div>
 
-          
+
         </div>
       </section>
     </div>

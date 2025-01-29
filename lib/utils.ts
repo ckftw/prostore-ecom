@@ -2,6 +2,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -27,5 +28,16 @@ export async function formatError(error: any) {
     return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
   } else {
     return typeof error.message === 'string' ? error.message : JSON.stringify(error.message)
+  }
+}
+
+//ROUND NUMBER TO 2 DECIMAL PLACES
+export function round2(value: number | string) {
+  if (typeof value === 'number') {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
+  } else if (typeof value === 'string') {
+    return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  } else {
+    throw new Error('value is not a number')
   }
 }
