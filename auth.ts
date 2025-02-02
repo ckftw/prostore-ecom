@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import { prisma } from './db/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { compareSync } from 'bcrypt-ts-edge';
+import { compare } from './lib/encrypt';
 import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -36,7 +36,10 @@ export const config = {
                     }
                 })
                 if (user && user.password) {
-                    const isMatch = compareSync(credentials.password as string, user.password);
+                    const isMatch = await compare(
+                        credentials.password as string,
+                        user.password
+                    );
 
                     //CHECK IF PASSWORD IS CORRECT
                     if (isMatch) {

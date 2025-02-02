@@ -18,7 +18,7 @@ const OrderDetailsPage = async(props:{
     console.log('id',id);
     return (
         <div>
-           <OrderDetailsTable order={{
+           <OrderDetailsTable paypalClientId={process.env.PAYPAL_CLIENT_ID || 'sb'} order={{
             ...order,
             shippingAddress: order.shippingAddress as ShippingAddress
            }} />
