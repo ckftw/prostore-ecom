@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 "use server";
 
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -10,6 +11,7 @@ import { prisma } from "@/db/prisma";
 import { CartItem, PaymentResult } from "@/types";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
+import { PAGE_SIZE } from "../constants";
 
 //CREATE ORDER AND CREATE ORDER ITEMS
 export async function createOrder() {
@@ -222,4 +224,24 @@ async function updateOrderToPaid({ orderId, paymentResult }: { orderId: string; 
         }
     })
     if (!updatedOrder) throw new Error('Order not found')
+}
+
+//GET USERS ORDERS
+export async function getMyOrders({ limit = PAGE_SIZE, page }: { limit?: number; page: number }) {
+    const session = await auth();
+    if (!session) throw new Error('user not found');
+    const data = await prisma.order.findMany({
+        where: { userId: session?.user?.id! },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: (page - 1) * limit,
+
+    })
+    const dataCount = await prisma.order.count({
+        where: { userId: session?.user?.id! }
+    })
+    return {
+        data,
+        totalPages: Math.ceil(dataCount / limit)
+    }
 }
