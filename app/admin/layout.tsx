@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MainNav from "./main-nav";
 import { Input } from "@/components/ui/input";
+import AdminSearch from "@/components/admin/AdminSearch";
 
 export default function AdminLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     return (
@@ -16,9 +17,7 @@ export default function AdminLayout({ children, }: Readonly<{ children: React.Re
                     </Link>
                     <MainNav className="mx-6" />
                     <div className="ml-auto items-center flex spac-x-4">
-                        <div>
-                            <Input type="search" placeholder="Search..." className="md:w-[100px] lg:w-[300px]" />
-                        </div>
+                       <AdminSearch />
                         <Menu />
                     </div>
                 </div>
