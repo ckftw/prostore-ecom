@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import queryString from 'query-string';
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -19,7 +21,7 @@ export function formatNumberWithDecimal(num: number): string {
   return decimal ? `${int}.${decimal.padEnd(2, '0')}` : `${int}.00`
 }
 
-export async function formatError(error: any) {
+export function formatError(error: any) {
   if (error.name === 'ZodError') {
     const fieldErrors = Object.keys(error.errors).map((field) => error.errors[field].message);
     return fieldErrors.join('. ');
@@ -56,6 +58,11 @@ export function formatCurrency(amount: number | string | null) {
   } else {
     return NaN;
   }
+}
+
+const NUMBER_FORMATTER = new Intl.NumberFormat('en-US');
+export function formatNumber(number: number) {
+  return NUMBER_FORMATTER.format(number);
 }
 
 // SHORTEN UUID
@@ -105,4 +112,17 @@ export const formatDateTime = (dateString: Date) => {
     dateOnly: formattedDate,
     timeOnly: formattedTime
   }
+}
+
+export function formUrlQuery({ params, key, value }: { params: string; key: string; value: string | null }) {
+  const query = queryString.parse(params);
+  query[key] = value;
+  return queryString.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query
+    }, {
+    skipNull: true,
+  }
+  )
 }
