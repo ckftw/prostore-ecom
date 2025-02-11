@@ -1,5 +1,6 @@
 import ProductCarousel from "@/components/product/product-carousel";
 import ProductList from "@/components/product/product-list";
+import ViewProducts from "@/components/ViewProducts";
 import { getFeaturedProducts, getLatestProducts } from "@/lib/actions/products.actions";
 
 const Homepage = async () => {
@@ -12,6 +13,7 @@ const Homepage = async () => {
         <ProductCarousel data={featuredProducts} />
       )}
       <ProductList limit={6} data={latestProducts} title="Newest Arrivals" />
+      <ViewProducts/>
     </div>
   </>;
 };
