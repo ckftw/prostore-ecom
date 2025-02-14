@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import NotFoundPage from "@/app/not-found";
+import { auth } from "@/auth";
 import AddToCart from "@/components/product/add-to-cart";
 import ProductImages from "@/components/product/product-images";
 import ProductPrice from "@/components/product/product-price";
@@ -10,6 +11,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getMyCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/products.actions";
 import { notFound } from "next/navigation";
+import ReviewList from "./review-list";
+import Rating from "@/components/product/rating";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -17,6 +20,8 @@ const ProductDetailsPage = async (props: {
   const { slug } = await props.params;
   const product = await getProductBySlug(slug);
   const cart = await getMyCart();
+  const session = await auth();
+  const userId = session?.user?.id;
 
   if (!product) notFound();
   return (
@@ -36,9 +41,8 @@ const ProductDetailsPage = async (props: {
                 {product.brand} {product.category}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
-              <p>
-                {product.rating} of {product.numReviews} Reviews
-              </p>
+              <Rating value={Number(product.rating)} />
+              <p>{product.numReviews} reviews</p>
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <ProductPrice
                   className="w-24 rounded-full bg-green-100 text-green-700 px-5 py-2"
@@ -86,6 +90,11 @@ const ProductDetailsPage = async (props: {
 
 
         </div>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="h2-bold">Custom Reviews</h2>
+        <ReviewList userId={userId || ""} productId={product.id} productSlug={product.slug} />
       </section>
     </div>
   );

@@ -27,3 +27,4 @@ SECTION 3----------->
 Packages used-->
 For password encryption (npm install bcrypt-ts-edge)
 For insight reportss admin (three chart)
+For sending emails after purchase(npm i resend react-email @react-email/components)

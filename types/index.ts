@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
-import { insertProductSchema, insertCartSchema, cartItemSchema, shippingAddressSchema, insertOrderSchema, insertOrderItemSchema, paymentResultSchema } from '@/lib/validators';
+import { insertProductSchema, insertCartSchema, cartItemSchema, shippingAddressSchema, insertOrderSchema, insertOrderItemSchema, paymentResultSchema, insertReviewsSchema } from '@/lib/validators';
 import { z } from 'zod';
 
 
@@ -7,6 +7,7 @@ import { z } from 'zod';
 export type Product = z.infer<typeof insertProductSchema> & {
     id: string;
     rating: string;
+    numReviews: number;
     createdAt: Date;
 }
 
@@ -28,3 +29,8 @@ export type Order = z.infer<typeof insertOrderSchema> & {
 
 }
 export type PaymentResult = z.infer<typeof paymentResultSchema>
+export type Review = z.infer<typeof insertReviewsSchema> & {
+    id: string;
+    createdAt: Date;
+    user?: { name: string };
+}
